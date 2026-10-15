@@ -1,0 +1,2750 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <script type="module" src="/@vite/client"></script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>NYC Trip Companion • London ✈️ NYC</title>
+  <meta name="description" content="Minimalist, curated New York City travel companion for Angsuman Bhanjdeo. Complete 4-day itinerary, 23 food directory spots with offline tracker, and transit guide.">
+  <meta property="og:title" content="NYC Trip Companion • London ✈️ NYC">
+  <meta property="og:description" content="Minimalist, curated New York City travel companion for Angsuman Bhanjdeo. Complete 4-day itinerary, 23 food directory spots with offline tracker, and transit guide.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+
+  <!-- Apple & PWA Mobile Web App Settings -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NYC Trip">
+  <meta name="theme-color" content="#090D16">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- Clean Minimalist Monogram Favicon -->
+  <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23090D16%22/&gt;&lt;text x=%2250%22 y=%2264%22 font-family=%22system-ui,-apple-system,sans-serif%22 font-size=%2244%22 font-weight=%22700%22 fill=%22%23E2A03F%22 text-anchor=%22middle%22&gt;NYC&lt;/text&gt;&lt;/svg&gt;">
+
+  <style>
+    /* ----------------------------------------------------
+       RESET & MINIMALIST DESIGN SYSTEM
+       ---------------------------------------------------- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #090D16;
+      --bg-surface: #101624;
+      --bg-surface-elevated: #161F33;
+      --bg-subtle: #1C2740;
+      --text: #F1F5F9;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --accent: #E2A03F;
+      --accent-muted: rgba(226, 160, 63, 0.12);
+      --accent-hover: #F0B153;
+      --green: #22C55E;
+      --green-muted: rgba(34, 197, 94, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --nav-height: 58px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", -system-ui, "Helvetica Neue", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 14.5px;
+      -webkit-font-smoothing: antialiased;
+      padding-top: calc(var(--safe-top) + 12px);
+      padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 32px);
+      min-height: 100vh;
+    }
+
+    /* Layout Shell */
+    .app-container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ----------------------------------------------------
+       COMPACT EDITORIAL HEADER (3-ZONE CONTRACT)
+       ---------------------------------------------------- */
+    .top-header {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .brand-wordmark {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .traveler-byline {
+      font-size: 12px;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .clocks-inline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .clocks-inline .nyc-time {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Weather Strip */
+    .weather-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+    }
+
+    .weather-info-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .weather-deg {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .weather-desc {
+      color: var(--text-muted);
+    }
+
+    .weather-tip-line {
+      color: var(--accent);
+      font-size: 11.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 260px;
+    }
+
+    @media (max-width: 480px) {
+      .weather-tip-line {
+        display: none;
+      }
+    }
+
+    .weather-refresh-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 2px;
+      transition: color 0.15s;
+    }
+
+    .weather-refresh-btn:hover {
+      color: var(--text);
+    }
+
+    /* ----------------------------------------------------
+       DAY SELECTOR (LANDING PAGE ITINERARY)
+       ---------------------------------------------------- */
+    .day-selector-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 16px;
+      background: var(--bg-surface);
+      padding: 4px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .day-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 4px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      transition: all 0.15s ease;
+    }
+
+    .day-btn .day-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .day-btn .day-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .day-btn.active {
+      background: var(--bg-surface-elevated);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+    }
+
+    .day-btn.active .day-sub {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Day Header Overview */
+    .day-overview {
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    .day-heading {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .day-description {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ----------------------------------------------------
+       TIMED STOP CARDS (CLEAN & MINIMALIST)
+       ---------------------------------------------------- */
+    .stop-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: border-color 0.15s;
+    }
+
+    .stop-card:hover {
+      border-color: var(--border-strong);
+    }
+
+    .stop-card.completed {
+      opacity: 0.65;
+    }
+
+    .stop-card.completed .stop-title {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .stop-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stop-meta .stop-duration {
+      color: var(--text-dim);
+      font-weight: 400;
+    }
+
+    .stop-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+
+    .stop-details {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    /* Clean Food Callout Box */
+    .food-box {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+
+    .food-box-header {
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .food-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .food-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .food-item-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .food-item-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .food-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .link-food-maps {
+      font-size: 11.5px;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+      padding: 4px 8px;
+      background: var(--accent-muted);
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+
+    .link-food-maps:hover {
+      background: rgba(226, 160, 63, 0.2);
+    }
+
+    /* Action Buttons Row */
+    .stop-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding-top: 4px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      min-height: 40px;
+      transition: all 0.15s ease;
+      background: var(--bg-surface-elevated);
+      color: var(--text);
+    }
+
+    .btn-action:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-subtle);
+    }
+
+    .btn-action.btn-visited.checked {
+      background: var(--green-muted);
+      border-color: rgba(34, 197, 94, 0.4);
+      color: var(--green);
+    }
+
+    /* ----------------------------------------------------
+       FOOD DIRECTORY TAB
+       ---------------------------------------------------- */
+    .filter-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+    }
+
+    .filter-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      min-height: 36px;
+      transition: all 0.15s;
+    }
+
+    .filter-btn.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+      font-weight: 600;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .search-input-wrap input {
+      width: 100%;
+      height: 44px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0 36px 0 36px;
+      font-size: 13.5px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-input-wrap input:focus {
+      border-color: var(--border-strong);
+    }
+
+    .search-input-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 13px;
+      width: 18px;
+      height: 18px;
+      color: var(--text-dim);
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      padding: 4px;
+      display: none;
+      font-size: 16px;
+    }
+
+    /* Tracker Strip */
+    .food-tracker-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+      font-size: 13px;
+    }
+
+    .food-tracker-progress {
+      width: 120px;
+      height: 6px;
+      background: var(--bg-subtle);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .food-tracker-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    /* Food Cards */
+    .spot-card-food {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 10px;
+      transition: border-color 0.15s;
+    }
+
+    .spot-card-food.tried {
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .food-card-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .food-card-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .food-card-meta {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .food-card-address {
+      font-size: 12.5px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .food-card-dish {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    .food-card-dish strong {
+      color: var(--accent);
+    }
+
+    /* ----------------------------------------------------
+       TRANSIT & TIPS TAB
+       ---------------------------------------------------- */
+    .transit-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .transit-heading {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .transit-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .transit-text li {
+      margin-bottom: 6px;
+      margin-left: 18px;
+    }
+
+    .omny-counter {
+      margin-top: 10px;
+      padding: 10px;
+      background: var(--bg-surface-elevated);
+      border-radius: var(--radius-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ----------------------------------------------------
+       STICKY BOTTOM NAVIGATION (CLEAN & RESTRICTED)
+       ---------------------------------------------------- */
+    .bottom-tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(9, 13, 22, 0.94);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      height: var(--nav-height);
+      display: flex;
+      justify-content: center;
+      z-index: 1000;
+      padding-bottom: var(--safe-bottom);
+    }
+
+    .bottom-tab-inner {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 100%;
+    }
+
+    .tab-item-btn {
+      flex: 1;
+      height: 100%;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+
+    .tab-item-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 1.8;
+    }
+
+    .tab-item-btn.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Views */
+    .view-container {
+      display: none;
+    }
+
+    .view-container.active {
+      display: block;
+    }
+
+    /* Toast */
+    .minimal-toast {
+      position: fixed;
+      bottom: calc(var(--nav-height) + var(--safe-bottom) + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2000;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .minimal-toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+<script src="/_aistudio-iframe.js?v=6634132a"></script><script src="https://cdn.jsdelivr.net/npm/html2canvas-pro@2.0.4"></script><style>.aistudio-hover-highlight { box-shadow: inset 0 0 0 0.5px white, inset 0 0 0 1.5px rgba(128,128,128,0.6) !important; }.aistudio-active-highlight { outline: 2px solid #87a9ff !important; outline-offset: -2px !important; box-shadow: 0 0 0 0.5px rgba(0,0,0,0.3), inset 0 0 0 0.5px rgba(0,0,0,0.3) !important; }.aistudio-generating-blur { filter: blur(5px) grayscale(100%) brightness(28%) !important; transition: filter 0.3s ease; }#aistudio-focus-mode-tag { position: absolute; display: none; align-items: center; gap: 4px; background: #87a9ff; border-radius: 12px; z-index: 10000; padding: 8px; color: #32302c; font-family: Inter, sans-serif; font-size: 14px; font-style: normal; font-weight: 500; line-height: 21px; pointer-events: none; }#aistudio-hover-mode-tag { position: absolute; display: none; align-items: center; gap: 4px; background: rgba(128,128,128,0.6); border-radius: 12px; z-index: 10000; padding: 8px; color: white; font-family: Inter, sans-serif; font-size: 14px; font-style: normal; font-weight: 500; line-height: 21px; pointer-events: none; }.aistudio-img-icon { display: none; vertical-align: middle; pointer-events: auto; cursor: pointer; }.aistudio-img-icon.visible { display: inline-flex; }#aistudio-focus-mode-tag .aistudio-img-icon { position: relative; width: 26px; height: 26px; background: #32302c; border-radius: 6px; margin: -4px -4px -4px 0; }#aistudio-focus-mode-tag .aistudio-img-icon::before { content: ""; position: absolute; top: 4px; left: 4px; width: 18px; height: 18px; background-color: white; -webkit-mask-image: url("https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/edit_fix_auto/default/24px.svg"); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; mask-image: url("https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/edit_fix_auto/default/24px.svg"); mask-size: contain; mask-repeat: no-repeat; }#aistudio-hover-mode-tag .aistudio-img-icon { position: relative; width: 18px; height: 18px; margin-left: 4px; }#aistudio-hover-mode-tag .aistudio-img-icon::before { content: ""; position: absolute; top: 0; left: 0; width: 18px; height: 18px; background-color: white; -webkit-mask-image: url("https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/edit_fix_auto/default/24px.svg"); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; mask-image: url("https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/edit_fix_auto/default/24px.svg"); mask-size: contain; mask-repeat: no-repeat; }#aistudio-focus-mode-tag .aistudio-img-icon:hover, #aistudio-hover-mode-tag .aistudio-img-icon:hover { background: #424242 !important; }#aistudio-focus-mode-tag .aistudio-img-icon:active, #aistudio-hover-mode-tag .aistudio-img-icon:active { background: #393f51 !important; }</style><style id="NotiflixNotifyInternalCSS">[id^=NotiflixNotifyWrap]{pointer-events:none;position:fixed;z-index:4001;opacity:1;right:10px;top:10px;width:280px;max-width:96%;-webkit-box-sizing:border-box;box-sizing:border-box;background:transparent}[id^=NotiflixNotifyWrap].nx-flex-center-center{max-height:calc(100vh - 20px);overflow-x:hidden;overflow-y:auto;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;margin:auto}[id^=NotiflixNotifyWrap]::-webkit-scrollbar{width:0;height:0}[id^=NotiflixNotifyWrap]::-webkit-scrollbar-thumb{background:transparent}[id^=NotiflixNotifyWrap]::-webkit-scrollbar-track{background:transparent}[id^=NotiflixNotifyWrap] *{-webkit-box-sizing:border-box;box-sizing:border-box}[id^=NotiflixNotifyOverlay]{-webkit-transition:background .3s ease-in-out;-o-transition:background .3s ease-in-out;transition:background .3s ease-in-out}[id^=NotiflixNotifyWrap]>div{pointer-events:all;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;font-family:"Quicksand",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;width:100%;display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;position:relative;margin:0 0 10px;border-radius:5px;background:#1e1e1e;color:#fff;padding:10px 12px;font-size:14px;line-height:1.4}[id^=NotiflixNotifyWrap]>div:last-child{margin:0}[id^=NotiflixNotifyWrap]>div.nx-with-callback{cursor:pointer}[id^=NotiflixNotifyWrap]>div.nx-with-icon{padding:8px;min-height:56px}[id^=NotiflixNotifyWrap]>div.nx-paused{cursor:auto}[id^=NotiflixNotifyWrap]>div.nx-notify-click-to-close{cursor:pointer}[id^=NotiflixNotifyWrap]>div.nx-with-close-button{padding:10px 36px 10px 12px}[id^=NotiflixNotifyWrap]>div.nx-with-icon.nx-with-close-button{padding:6px 36px 6px 6px}[id^=NotiflixNotifyWrap]>div>span.nx-message{cursor:inherit;font-weight:normal;font-family:inherit!important;word-break:break-all;word-break:break-word}[id^=NotiflixNotifyWrap]>div>span.nx-close-button{cursor:pointer;-webkit-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out;position:absolute;right:8px;top:0;bottom:0;margin:auto;color:inherit;width:20px;height:20px}[id^=NotiflixNotifyWrap]>div>span.nx-close-button:hover{-webkit-transform:rotate(90deg);transform:rotate(90deg)}[id^=NotiflixNotifyWrap]>div>span.nx-close-button>svg{position:absolute;width:16px;height:16px;right:2px;top:2px}[id^=NotiflixNotifyWrap]>div>.nx-message-icon{position:absolute;width:40px;height:40px;font-size:30px;line-height:40px;text-align:center;left:8px;top:0;bottom:0;margin:auto;border-radius:inherit}[id^=NotiflixNotifyWrap]>div>.nx-message-icon-fa.nx-message-icon-fa-shadow{color:inherit;background:rgba(0,0,0,.15);-webkit-box-shadow:inset 0 0 34px rgba(0,0,0,.2);box-shadow:inset 0 0 34px rgba(0,0,0,.2);text-shadow:0 0 10px rgba(0,0,0,.3)}[id^=NotiflixNotifyWrap]>div>span.nx-with-icon{position:relative;float:left;width:calc(100% - 40px);margin:0 0 0 40px;padding:0 0 0 10px;-webkit-box-sizing:border-box;box-sizing:border-box}[id^=NotiflixNotifyWrap]>div.nx-rtl-on>.nx-message-icon{left:auto;right:8px}[id^=NotiflixNotifyWrap]>div.nx-rtl-on>span.nx-with-icon{padding:0 10px 0 0;margin:0 40px 0 0}[id^=NotiflixNotifyWrap]>div.nx-rtl-on>span.nx-close-button{right:auto;left:8px}[id^=NotiflixNotifyWrap]>div.nx-with-icon.nx-with-close-button.nx-rtl-on{padding:6px 6px 6px 36px}[id^=NotiflixNotifyWrap]>div.nx-with-close-button.nx-rtl-on{padding:10px 12px 10px 36px}[id^=NotiflixNotifyOverlay].nx-with-animation,[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-fade{-webkit-animation:notify-animation-fade .3s ease-in-out 0s normal;animation:notify-animation-fade .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-fade{0%{opacity:0}100%{opacity:1}}@keyframes notify-animation-fade{0%{opacity:0}100%{opacity:1}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-zoom{-webkit-animation:notify-animation-zoom .3s ease-in-out 0s normal;animation:notify-animation-zoom .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-zoom{0%{-webkit-transform:scale(0);transform:scale(0)}50%{-webkit-transform:scale(1.05);transform:scale(1.05)}100%{-webkit-transform:scale(1);transform:scale(1)}}@keyframes notify-animation-zoom{0%{-webkit-transform:scale(0);transform:scale(0)}50%{-webkit-transform:scale(1.05);transform:scale(1.05)}100%{-webkit-transform:scale(1);transform:scale(1)}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-right{-webkit-animation:notify-animation-from-right .3s ease-in-out 0s normal;animation:notify-animation-from-right .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-from-right{0%{right:-300px;opacity:0}50%{right:8px;opacity:1}100%{right:0;opacity:1}}@keyframes notify-animation-from-right{0%{right:-300px;opacity:0}50%{right:8px;opacity:1}100%{right:0;opacity:1}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-left{-webkit-animation:notify-animation-from-left .3s ease-in-out 0s normal;animation:notify-animation-from-left .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-from-left{0%{left:-300px;opacity:0}50%{left:8px;opacity:1}100%{left:0;opacity:1}}@keyframes notify-animation-from-left{0%{left:-300px;opacity:0}50%{left:8px;opacity:1}100%{left:0;opacity:1}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-top{-webkit-animation:notify-animation-from-top .3s ease-in-out 0s normal;animation:notify-animation-from-top .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-from-top{0%{top:-50px;opacity:0}50%{top:8px;opacity:1}100%{top:0;opacity:1}}@keyframes notify-animation-from-top{0%{top:-50px;opacity:0}50%{top:8px;opacity:1}100%{top:0;opacity:1}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-bottom{-webkit-animation:notify-animation-from-bottom .3s ease-in-out 0s normal;animation:notify-animation-from-bottom .3s ease-in-out 0s normal}@-webkit-keyframes notify-animation-from-bottom{0%{bottom:-50px;opacity:0}50%{bottom:8px;opacity:1}100%{bottom:0;opacity:1}}@keyframes notify-animation-from-bottom{0%{bottom:-50px;opacity:0}50%{bottom:8px;opacity:1}100%{bottom:0;opacity:1}}[id^=NotiflixNotifyOverlay].nx-with-animation.nx-remove,[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-fade.nx-remove{opacity:0;-webkit-animation:notify-remove-fade .3s ease-in-out 0s normal;animation:notify-remove-fade .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-fade{0%{opacity:1}100%{opacity:0}}@keyframes notify-remove-fade{0%{opacity:1}100%{opacity:0}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-zoom.nx-remove{-webkit-transform:scale(0);transform:scale(0);-webkit-animation:notify-remove-zoom .3s ease-in-out 0s normal;animation:notify-remove-zoom .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-zoom{0%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(1.05);transform:scale(1.05)}100%{-webkit-transform:scale(0);transform:scale(0)}}@keyframes notify-remove-zoom{0%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(1.05);transform:scale(1.05)}100%{-webkit-transform:scale(0);transform:scale(0)}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-top.nx-remove{opacity:0;-webkit-animation:notify-remove-to-top .3s ease-in-out 0s normal;animation:notify-remove-to-top .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-to-top{0%{top:0;opacity:1}50%{top:8px;opacity:1}100%{top:-50px;opacity:0}}@keyframes notify-remove-to-top{0%{top:0;opacity:1}50%{top:8px;opacity:1}100%{top:-50px;opacity:0}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-right.nx-remove{opacity:0;-webkit-animation:notify-remove-to-right .3s ease-in-out 0s normal;animation:notify-remove-to-right .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-to-right{0%{right:0;opacity:1}50%{right:8px;opacity:1}100%{right:-300px;opacity:0}}@keyframes notify-remove-to-right{0%{right:0;opacity:1}50%{right:8px;opacity:1}100%{right:-300px;opacity:0}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-bottom.nx-remove{opacity:0;-webkit-animation:notify-remove-to-bottom .3s ease-in-out 0s normal;animation:notify-remove-to-bottom .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-to-bottom{0%{bottom:0;opacity:1}50%{bottom:8px;opacity:1}100%{bottom:-50px;opacity:0}}@keyframes notify-remove-to-bottom{0%{bottom:0;opacity:1}50%{bottom:8px;opacity:1}100%{bottom:-50px;opacity:0}}[id^=NotiflixNotifyWrap]>div.nx-with-animation.nx-from-left.nx-remove{opacity:0;-webkit-animation:notify-remove-to-left .3s ease-in-out 0s normal;animation:notify-remove-to-left .3s ease-in-out 0s normal}@-webkit-keyframes notify-remove-to-left{0%{left:0;opacity:1}50%{left:8px;opacity:1}100%{left:-300px;opacity:0}}@keyframes notify-remove-to-left{0%{left:0;opacity:1}50%{left:8px;opacity:1}100%{left:-300px;opacity:0}}</style></head>
+<body jf-observer-attached="true">
+
+  <div class="app-container">
+
+    <!-- COMPACT TOP HEADER -->
+    <header class="top-header">
+      <div class="top-row">
+        <div>
+          <h1 class="brand-wordmark">NYC Trip Companion</h1>
+          <div class="traveler-byline">Angsuman Bhanjdeo · London ✈ NYC</div>
+        </div>
+        <div class="clocks-inline">
+          <div><span style="color: var(--text-dim);">NYC</span> <span class="nyc-time" id="clockNyc">11:58:11 AM</span></div>
+          <div><span style="color: var(--text-dim);">LDN</span> <span id="clockLdn">16:58</span></div>
+        </div>
+      </div>
+
+      <!-- Live Open-Meteo Weather Strip -->
+      <div class="weather-strip">
+        <div class="weather-info-left">
+          <span class="weather-deg" id="weatherDeg">62°F</span>
+          <span class="weather-desc" id="weatherDesc">Clear Sky</span>
+          <span class="weather-tip-line" id="weatherTip">Pleasant autumn walking weather</span>
+        </div>
+        <button class="weather-refresh-btn" id="btnRefreshWeather" title="Refresh weather" aria-label="Refresh weather">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+            <path d="M21 3v5h-5"></path>
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+            <path d="M3 21v-5h5"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ============================================== -->
+    <!-- VIEW 1: ITINERARY (SELECT ANY DAY)             -->
+    <!-- ============================================== -->
+    <main id="viewItinerary" class="view-container">
+      
+      <!-- Day Selector Switcher -->
+      <nav class="day-selector-bar" aria-label="Trip days">
+        <button class="day-btn" onclick="selectDay(1)" jf-ext-button-ct="saturday
+          oct 17">
+          <span class="day-title">Saturday</span>
+          <span class="day-sub">Oct 17</span>
+        </button>
+        <button class="day-btn active" onclick="selectDay(2)" jf-ext-button-ct="sunday
+          oct 18">
+          <span class="day-title">Sunday</span>
+          <span class="day-sub">Oct 18</span>
+        </button>
+        <button class="day-btn" onclick="selectDay(3)" jf-ext-button-ct="monday
+          oct 19">
+          <span class="day-title">Monday</span>
+          <span class="day-sub">Oct 19</span>
+        </button>
+        <button class="day-btn" onclick="selectDay(4)" jf-ext-button-ct="tuesday
+          oct 20">
+          <span class="day-title">Tuesday</span>
+          <span class="day-sub">Oct 20</span>
+        </button>
+      </nav>
+
+      <!-- Day Header & Overview -->
+      <div class="day-overview">
+        <h2 class="day-heading" id="currentDayHeading">Sunday, Oct 18 · Midtown Classics, Grand Central &amp; Roosevelt Island</h2>
+        <p class="day-description" id="currentDayDescription">Gilded architecture, New York Public Library, Top of the Rock panorama, aerial tramway, and Times Square neon.</p>
+      </div>
+
+      <!-- Container where detailed stops for selected day render dynamically -->
+      <div id="dayStopsContainer">
+          <article class="stop-card " id="card-d2-s1">
+            <div class="stop-meta">
+              <span>09:30 AM · Stop 1</span>
+              <span class="stop-duration">1.5 hours</span>
+            </div>
+
+            <h3 class="stop-title">Flatiron Building &amp; Madison Square Park</h3>
+            <p class="stop-details">Iconic 1902 triangular landmark, tree-shaded paths of Madison Square Park, and historic views looking up 5th Avenue.</p>
+
+            
+            <div class="food-box">
+              <div class="food-box-header">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
+                Nearby Food Callouts
+              </div>
+              
+              <div class="food-item">
+                <div class="food-item-name">Saltbread Ko (Midtown / Koreatown)</div>
+                <div class="food-item-desc">Korean sea salt butter bread (Sogeum-ppang) and fresh cream buns.</div>
+                <div class="food-item-actions">
+                  <a class="link-food-maps" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Saltbread%20Ko%20New%20York">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Open in Google Maps
+                  </a>
+                </div>
+              </div>
+            
+              <div class="food-item">
+                <div class="food-item-name">PopUp Bagels (Thompson St / Midtown)</div>
+                <div class="food-item-desc">Grip, Dip &amp; Rip hot salt bagels with artisan scallion schmear.</div>
+                <div class="food-item-actions">
+                  <a class="link-food-maps" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=PopUp%20Bagels%20New%20York">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Open in Google Maps
+                  </a>
+                </div>
+              </div>
+            
+            </div>
+          
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Flatiron%20Building%20New%20York">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Walking Directions
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleVisitedStop('d2-s1')" jf-ext-button-ct="mark visited">
+                <span class="visited-indicator">Mark Visited</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="stop-card " id="card-d2-s2">
+            <div class="stop-meta">
+              <span>11:15 AM · Stop 2</span>
+              <span class="stop-duration">1 hour 15m</span>
+            </div>
+
+            <h3 class="stop-title">NY Public Library &amp; Bryant Park</h3>
+            <p class="stop-details">Stephen A. Schwarzman Building, marble lions, Rose Main Reading Room, and Bryant Park autumn lawn.</p>
+
+            
+            <div class="food-box">
+              <div class="food-box-header">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
+                Nearby Food Callouts
+              </div>
+              
+              <div class="food-item">
+                <div class="food-item-name">Ralph's Coffee (Fifth Ave Flagship)</div>
+                <div class="food-item-desc">Bespoke drip roast and dark chocolate Valrhona bars.</div>
+                <div class="food-item-actions">
+                  <a class="link-food-maps" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Ralphs%20Coffee%205th%20Ave%20New%20York">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Open in Google Maps
+                  </a>
+                </div>
+              </div>
+            
+            </div>
+          
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=New%20York%20Public%20Library%20Main%20Branch%20New%20York">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Walking Directions
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleVisitedStop('d2-s2')" jf-ext-button-ct="mark visited">
+                <span class="visited-indicator">Mark Visited</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="stop-card " id="card-d2-s3">
+            <div class="stop-meta">
+              <span>12:45 PM · Stop 3</span>
+              <span class="stop-duration">1 hour 15m</span>
+            </div>
+
+            <h3 class="stop-title">Grand Central Terminal</h3>
+            <p class="stop-details">Celestial ceiling, whispering gallery archways, and the 4-faced opal brass clock on the main concourse.</p>
+
+            
+            <div class="food-box">
+              <div class="food-box-header">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
+                Nearby Food Callouts
+              </div>
+              
+              <div class="food-item">
+                <div class="food-item-name">Grand Central Oyster Bar (Lower Concourse)</div>
+                <div class="food-item-desc">Historic 1913 Guastavino tile vaults for clam chowder &amp; fresh oysters.</div>
+                <div class="food-item-actions">
+                  <a class="link-food-maps" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Grand%20Central%20Oyster%20Bar%20New%20York">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Open in Google Maps
+                  </a>
+                </div>
+              </div>
+            
+            </div>
+          
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Grand%20Central%20Terminal%20New%20York">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Walking Directions
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleVisitedStop('d2-s3')" jf-ext-button-ct="mark visited">
+                <span class="visited-indicator">Mark Visited</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="stop-card " id="card-d2-s4">
+            <div class="stop-meta">
+              <span>02:30 PM · Stop 4</span>
+              <span class="stop-duration">2 hours</span>
+            </div>
+
+            <h3 class="stop-title">Top of the Rock at Rockefeller Center</h3>
+            <p class="stop-details">Open-air 360° observation deck on the 70th floor with unobstructed views of the Empire State Building and Central Park.</p>
+
+            
+            <div class="food-box">
+              <div class="food-box-header">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
+                Nearby Food Callouts
+              </div>
+              
+              <div class="food-item">
+                <div class="food-item-name">Glace by Nonsit (1266 Madison Ave)</div>
+                <div class="food-item-desc">Blowtorched toasted marshmallow rim hot chocolate &amp; soft-serve.</div>
+                <div class="food-item-actions">
+                  <a class="link-food-maps" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Glace%20by%20Nonsit%201266%20Madison%20Ave%20New%20York">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Open in Google Maps
+                  </a>
+                </div>
+              </div>
+            
+            </div>
+          
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Top%20of%20the%20Rock%20New%20York">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Walking Directions
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleVisitedStop('d2-s4')" jf-ext-button-ct="mark visited">
+                <span class="visited-indicator">Mark Visited</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="stop-card " id="card-d2-s5">
+            <div class="stop-meta">
+              <span>04:45 PM · Stop 5</span>
+              <span class="stop-duration">1 hour</span>
+            </div>
+
+            <h3 class="stop-title">Roosevelt Island Aerial Tramway</h3>
+            <p class="stop-details">Tap contactless card ($2.90) at 59th St &amp; 2nd Ave. Glide 250 feet above the East River alongside Queensboro Bridge.</p>
+
+            
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Roosevelt%20Island%20Tramway%20Manhattan%20Station%20New%20York">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Walking Directions
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleVisitedStop('d2-s5')" jf-ext-button-ct="mark visited">
+                <span class="visited-indicator">Mark Visited</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="stop-card " id="card-d2-s6">
+            <div class="stop-meta">
+              <span>06:30 PM · Stop 6</span>
+              <span class="stop-duration">Evening Dinner</span>
+            </div>
+
+            <h3 class="stop-title">Times Square &amp; Korea Town (32nd St)</h3>
+            <p class="stop-details">Experience the neon canyon of Broadway before heading to 32nd St for tabletop Korean BBQ and soju.</p>
+
+            
+            <div class="food-box">
+              <div class="food-box-header">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
+                Nearby Food Callouts
+              </div>
+              
+              <div class="food-item">
+                <div class="food-item-name">Jongro BBQ (22 W 32nd St)</div>
+                <div class="food-item-desc">Tabletop grilled prime marinated galbi &amp; kimchi stew.</div>
+                <div class="food-item-actions">
+                  <a class="link-food-maps" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Jongro%20BBQ%2022%20W%2032nd%20St%20New%20York">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Open in Google Maps
+                  </a>
+                </div>
+              </div>
+            
+            </div>
+          
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Koreatown%2032nd%20St%20New%20York">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Walking Directions
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleVisitedStop('d2-s6')" jf-ext-button-ct="mark visited">
+                <span class="visited-indicator">Mark Visited</span>
+              </button>
+            </div>
+          </article>
+        </div>
+
+    </main>
+
+    <!-- ============================================== -->
+    <!-- VIEW 2: FOOD DIRECTORY (23 CURATED SPOTS)      -->
+    <!-- ============================================== -->
+    <main id="viewFood" class="view-container">
+
+      <!-- Tracker Strip -->
+      <div class="food-tracker-strip">
+        <span><strong>Tasted:</strong> <span id="foodTastedCount">0</span> of 23 spots</span>
+        <div class="food-tracker-progress">
+          <div class="food-tracker-fill" id="foodTrackerBar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Search Input -->
+      <div class="search-input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="foodSearchInput" placeholder="Search restaurant, dish, neighborhood..." autocomplete="off" jf-ext-cache-id="0">
+        <button class="search-clear-btn" id="foodClearBtn" aria-label="Clear search" jf-ext-button-ct="×">×</button>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="filter-bar" id="foodFilterChips">
+        <button class="filter-btn active" data-category="all" jf-ext-button-ct="all (23)">All (23)</button>
+        <button class="filter-btn" data-category="pizza" jf-ext-button-ct="pizza">Pizza</button>
+        <button class="filter-btn" data-category="bagels" jf-ext-button-ct="bagels">Bagels</button>
+        <button class="filter-btn" data-category="coffee" jf-ext-button-ct="coffee &amp; bakery">Coffee &amp; Bakery</button>
+        <button class="filter-btn" data-category="dumplings" jf-ext-button-ct="dumplings">Dumplings</button>
+        <button class="filter-btn" data-category="west-village" jf-ext-button-ct="west village">West Village</button>
+        <button class="filter-btn" data-category="williamsburg" jf-ext-button-ct="williamsburg">Williamsburg</button>
+        <button class="filter-btn" data-category="chinatown" jf-ext-button-ct="chinatown">Chinatown</button>
+      </div>
+
+      <!-- Food List -->
+      <div id="foodListMount">
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">L'Industrie Pizzeria (West Village)</h3>
+              <span class="food-card-meta">West Village</span>
+            </div>
+            <div class="food-card-address">104 Christopher St, New York, NY 10014</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Hot honey burrata slice with fresh basil &amp; tartufo.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=L'Industrie%20Pizzeria%20(West%20Village)%20104%20Christopher%20St%2C%20New%20York%2C%20NY%2010014">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-1')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">L'Industrie Pizzeria (Williamsburg)</h3>
+              <span class="food-card-meta">Williamsburg</span>
+            </div>
+            <div class="food-card-address">254 S 2nd St, Brooklyn, NY 11211</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Fig jam bacon with fresh mozzarella &amp; burrata.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=L'Industrie%20Pizzeria%20(Williamsburg)%20254%20S%202nd%20St%2C%20Brooklyn%2C%20NY%2011211">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-2')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Apollo Bagels</h3>
+              <span class="food-card-meta">West Village</span>
+            </div>
+            <div class="food-card-address">73 Greenwich Ave, New York, NY 10014</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Open-faced sourdough bagel with Nova lox, dill &amp; tomato.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Apollo%20Bagels%2073%20Greenwich%20Ave%2C%20New%20York%2C%20NY%2010014">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-3')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Los Tacos No. 1</h3>
+              <span class="food-card-meta">West Village</span>
+            </div>
+            <div class="food-card-address">Chelsea Market (75 9th Ave) &amp; Times Square</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Tijuana adobada spit pork tacos with fresh pineapple slice.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Los%20Tacos%20No.%201%20Chelsea%20Market%20(75%209th%20Ave)%20%26%20Times%20Square">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-4')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Mama's TOO!</h3>
+              <span class="food-card-meta">West Village</span>
+            </div>
+            <div class="food-card-address">323 Bleecker St, New York, NY 10014</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Angry Nonna square slice &amp; Cacio e Pepe focaccia.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Mama's%20TOO!%20323%20Bleecker%20St%2C%20New%20York%2C%20NY%2010014">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-5')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Levain Bakery</h3>
+              <span class="food-card-meta">Upper West Side</span>
+            </div>
+            <div class="food-card-address">167 W 74th St, New York, NY 10023</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> 6oz warm Chocolate Chip Walnut cookie.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Levain%20Bakery%20167%20W%2074th%20St%2C%20New%20York%2C%20NY%2010023">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-6')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">PopUp Bagels</h3>
+              <span class="food-card-meta">West Village</span>
+            </div>
+            <div class="food-card-address">177 Thompson St, New York, NY 10012</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Grip, Dip &amp; Rip hot salt bagels with artisan schmears.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=PopUp%20Bagels%20177%20Thompson%20St%2C%20New%20York%2C%20NY%2010012">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-7')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">The Golden Swan</h3>
+              <span class="food-card-meta">West Village</span>
+            </div>
+            <div class="food-card-address">314 W 11th St, New York, NY 10014</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Historic townhouse dinner &amp; signature Gibson cocktails.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=The%20Golden%20Swan%20314%20W%2011th%20St%2C%20New%20York%2C%20NY%2010014">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-8')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Sunday in Brooklyn</h3>
+              <span class="food-card-meta">Williamsburg</span>
+            </div>
+            <div class="food-card-address">348 Wythe Ave, Brooklyn, NY 11249</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Malted hazelnut brown butter pancakes &amp; cinnamon rolls.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Sunday%20in%20Brooklyn%20348%20Wythe%20Ave%2C%20Brooklyn%2C%20NY%2011249">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-9')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Ralph's Coffee / Ralph Lauren</h3>
+              <span class="food-card-meta">Upper East Side</span>
+            </div>
+            <div class="food-card-address">888 Madison Ave &amp; 5th Ave</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Bespoke drip brew, Ralph's espresso &amp; signature chocolate bar.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Ralph's%20Coffee%20%2F%20Ralph%20Lauren%20888%20Madison%20Ave%20%26%205th%20Ave">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-10')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Do Not Feed Alligators</h3>
+              <span class="food-card-meta">West Village</span>
+            </div>
+            <div class="food-card-address">337 Bleecker St, New York, NY 10014</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Minimalist Scandinavian cafe &amp; specialty pour-overs.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Do%20Not%20Feed%20Alligators%20337%20Bleecker%20St%2C%20New%20York%2C%20NY%2010014">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-11')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Fellini Coffee</h3>
+              <span class="food-card-meta">West Village</span>
+            </div>
+            <div class="food-card-address">174 7th Ave S, New York, NY 10014</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Vintage Roman sidewalk espresso kiosk &amp; pistachio cornetti.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Fellini%20Coffee%20174%207th%20Ave%20S%2C%20New%20York%2C%20NY%2010014">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-12')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Glace by Nonsit</h3>
+              <span class="food-card-meta">Upper East Side</span>
+            </div>
+            <div class="food-card-address">1266 Madison Ave, New York, NY 10128</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Blowtorched toasted marshmallow rim hot chocolate &amp; soft-serve.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Glace%20by%20Nonsit%201266%20Madison%20Ave%2C%20New%20York%2C%20NY%2010128">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-13')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">L'Appartement 4F</h3>
+              <span class="food-card-meta">Brooklyn Heights</span>
+            </div>
+            <div class="food-card-address">115 Montague St, Brooklyn, NY 11201</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Viral mini croissant cereal &amp; French almond croissants.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=L'Appartement%204F%20115%20Montague%20St%2C%20Brooklyn%2C%20NY%2011201">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-14')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Davelle</h3>
+              <span class="food-card-meta">Lower East Side</span>
+            </div>
+            <div class="food-card-address">102 Allen St, New York, NY 10002</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Japanese berry &amp; honey brick toasts, and mentaiko spaghetti.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Davelle%20102%20Allen%20St%2C%20New%20York%2C%20NY%2010002">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-15')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Deluxe Green Bo</h3>
+              <span class="food-card-meta">Chinatown</span>
+            </div>
+            <div class="food-card-address">66 Bayard St, New York, NY 10013</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Steaming pork soup dumplings &amp; crispy scallion pancakes.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Deluxe%20Green%20Bo%2066%20Bayard%20St%2C%20New%20York%2C%20NY%2010013">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-16')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Joe's Ginger</h3>
+              <span class="food-card-meta">Chinatown</span>
+            </div>
+            <div class="food-card-address">25 Pell St, New York, NY 10013</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Crabmeat soup dumplings &amp; pan-fried beef rolls.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Joe's%20Ginger%2025%20Pell%20St%2C%20New%20York%2C%20NY%2010013">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-17')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Miss DU's Tea Shop</h3>
+              <span class="food-card-meta">Chinatown</span>
+            </div>
+            <div class="food-card-address">133 Chrystie St, New York, NY 10002</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Fresh whipped cheese foam loose-leaf oolong &amp; jasmine teas.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Miss%20DU's%20Tea%20Shop%20133%20Chrystie%20St%2C%20New%20York%2C%20NY%2010002">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-18')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Caffe Paradiso</h3>
+              <span class="food-card-meta">Nolita</span>
+            </div>
+            <div class="food-card-address">202B Elizabeth St, New York, NY 10012</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Sicilian cannoli filled fresh to order &amp; espresso.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Caffe%20Paradiso%20202B%20Elizabeth%20St%2C%20New%20York%2C%20NY%2010012">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-19')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Neighborhood Coffee</h3>
+              <span class="food-card-meta">Nolita</span>
+            </div>
+            <div class="food-card-address">184 Mott St, New York, NY 10012</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Silky oat flat whites &amp; Nordic cardamom buns.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Neighborhood%20Coffee%20184%20Mott%20St%2C%20New%20York%2C%20NY%2010012">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-20')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Rhythm Zero</h3>
+              <span class="food-card-meta">Greenpoint</span>
+            </div>
+            <div class="food-card-address">398 Manhattan Ave, Brooklyn, NY 11211</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Ceramic matcha studio &amp; pour-over filter bar.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Rhythm%20Zero%20398%20Manhattan%20Ave%2C%20Brooklyn%2C%20NY%2011211">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-21')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Din Soup Dumplings</h3>
+              <span class="food-card-meta">DUMBO</span>
+            </div>
+            <div class="food-card-address">Brooklyn Bridge Waterfront, DUMBO, Brooklyn</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Hand-folded crab &amp; pork soup dumplings near DUMBO park.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Din%20Soup%20Dumplings%20Brooklyn%20Bridge%20Waterfront%2C%20DUMBO%2C%20Brooklyn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-22')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        
+          <article class="spot-card-food ">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">Saltbread Ko</h3>
+              <span class="food-card-meta">Midtown</span>
+            </div>
+            <div class="food-card-address">Koreatown / Midtown, New York, NY</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> Korean sea salt butter bread (Sogeum-ppang) &amp; fresh cream buns.
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Saltbread%20Ko%20Koreatown%20%2F%20Midtown%2C%20New%20York%2C%20NY">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited " onclick="toggleTriedFood('f-23')" jf-ext-button-ct="mark as tried">
+                <span>Mark as Tried</span>
+              </button>
+            </div>
+          </article>
+        </div>
+
+    </main>
+
+    <!-- ============================================== -->
+    <!-- VIEW 3: TRANSIT & TIPS                         -->
+    <!-- ============================================== -->
+    <main id="viewTransit" class="view-container active">
+
+      <!-- OMNY Guide -->
+      <div class="transit-section">
+        <h3 class="transit-heading">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+          OMNY Contactless Subway
+        </h3>
+        <ul class="transit-text">
+          <li><strong>$2.90 Flat Fare:</strong> Tap your iPhone with Apple Pay at any turnstile or local bus.</li>
+          <li><strong>Weekly $34.00 Fare Cap:</strong> After 12 taps using the same payment device in 7 days, all subsequent subway rides are automatically free.</li>
+          <li><strong>2-Hour Free Transfers:</strong> Free transfers between subway lines and buses within 120 minutes.</li>
+        </ul>
+        <div class="omny-counter">
+          <div>
+            <span style="font-weight: 600; font-size: 13px;">Ride Counter:</span>
+            <span id="omnyCountText" style="color: var(--accent); font-weight: 700; margin-left: 6px;">0 taps ($0.00) · 12 to free cap</span>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn-action" style="padding: 4px 10px; min-height: 32px;" onclick="addOmnyTap()" jf-ext-button-ct="+1 tap">+1 Tap</button>
+            <button class="btn-action" style="padding: 4px 8px; min-height: 32px; color: var(--text-dim);" onclick="resetOmnyTap()" jf-ext-button-ct="reset">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Free Staten Island Ferry -->
+      <div class="transit-section">
+        <h3 class="transit-heading">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"></path><path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"></path><line x1="12" y1="1" x2="12" y2="4"></line></svg>
+          Free Staten Island Ferry
+        </h3>
+        <ul class="transit-text">
+          <li><strong>Completely Free:</strong> 24/7 service from Whitehall Terminal (Lower Manhattan). Never buy tickets from street solicitors.</li>
+          <li><strong>Statue of Liberty Views:</strong> Stand on the <em>right side</em> leaving Manhattan, and <em>left side</em> returning for sunset skyline and statue shots.</li>
+        </ul>
+        <div style="margin-top: 10px;">
+          <a class="link-food-maps" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Whitehall+Terminal+Staten+Island+Ferry+New+York">
+            Whitehall Terminal on Maps →
+          </a>
+        </div>
+      </div>
+
+      <!-- NYC Ferry -->
+      <div class="transit-section">
+        <h3 class="transit-heading">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m4.93 4.93 4.24 4.24"></path><path d="m14.83 9.17 4.24-4.24"></path><path d="m14.83 14.83 4.24 4.24"></path><path d="m9.17 14.83-4.24 4.24"></path></svg>
+          NYC Ferry ($4.00)
+        </h3>
+        <p class="transit-text">
+          Scenic East River route connecting Wall St, DUMBO, and North Williamsburg. Purchase in the NYC Ferry app or terminal kiosks before boarding.
+        </p>
+      </div>
+
+      <!-- Emergency & Offline Save -->
+      <div class="transit-section">
+        <h3 class="transit-heading" style="color: #F87171;">Emergency &amp; Local Contacts</h3>
+        <ul class="transit-text">
+          <li><strong>Emergency:</strong> 911 (Police / Fire / Medical)</li>
+          <li><strong>NYC Info &amp; Non-Emergency:</strong> 311</li>
+          <li><strong>UK Consulate General:</strong> +1 (212) 745-0200 (885 2nd Ave)</li>
+        </ul>
+      </div>
+
+      <!-- Offline Export -->
+      <div class="transit-section" style="border-color: var(--border-strong);">
+        <h3 class="transit-heading">Save Standalone HTML</h3>
+        <p class="transit-text" style="margin-bottom: 10px;">
+          Save this exact companion to your iPhone Files or desktop. Works 100% offline without network connections.
+        </p>
+        <button class="btn-action" id="btnExportHtml" style="width: 100%; justify-content: center; background: var(--text); color: var(--bg); font-weight: 700;" jf-ext-button-ct="export single-file html">
+          Export Single-File HTML
+        </button>
+      </div>
+
+    </main>
+
+  </div><!-- /app-container -->
+
+  <!-- ============================================== -->
+  <!-- MINIMALIST STICKY BOTTOM TAB BAR               -->
+  <!-- ============================================== -->
+  <nav class="bottom-tab-bar" aria-label="App Navigation">
+    <div class="bottom-tab-inner">
+      <button class="tab-item-btn" id="tabBtnItinerary" onclick="switchNav('viewItinerary', this)" jf-ext-button-ct="itinerary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span>Itinerary</span>
+      </button>
+
+      <button class="tab-item-btn" id="tabBtnFood" onclick="switchNav('viewFood', this)" jf-ext-button-ct="food (23)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+          <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+          <line x1="6" y1="1" x2="6" y2="4"></line>
+          <line x1="10" y1="1" x2="10" y2="4"></line>
+          <line x1="14" y1="1" x2="14" y2="4"></line>
+        </svg>
+        <span>Food (23)</span>
+      </button>
+
+      <button class="tab-item-btn active" id="tabBtnTransit" onclick="switchNav('viewTransit', this)" jf-ext-button-ct="transit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <rect x="4" y="3" width="16" height="16" rx="2"></rect>
+          <path d="M4 11h16"></path>
+          <path d="M12 3v8"></path>
+          <path d="M8 19l-2 3"></path>
+          <path d="M16 19l2 3"></path>
+          <circle cx="8" cy="15" r="1"></circle>
+          <circle cx="16" cy="15" r="1"></circle>
+        </svg>
+        <span>Transit</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MINIMALIST TOAST -->
+  <div class="minimal-toast" id="minimalToast">Refreshing weather...</div>
+
+  <!-- ============================================== -->
+  <!-- JAVASCRIPT LOGIC & 4 FULL-DETAIL ITINERARIES   -->
+  <!-- ============================================== -->
+  <script>
+    /* ----------------------------------------------------
+       MASTER ITINERARY DATA: ALL 4 DAYS FULLY DETAILED
+       ---------------------------------------------------- */
+    const ITINERARY_DAYS = {
+      1: {
+        title: "Saturday, Oct 17 · Central Park, West Village & The Edge",
+        description: "Autumn park stroll, iconic West Village streets, Chelsea Market lunch, Little Island, High Line, and sunset sky deck.",
+        stops: [
+          {
+            id: "d1-s1",
+            time: "09:00 AM",
+            duration: "2 hours",
+            title: "Central Park Stroll",
+            details: "The Mall's elm canopy, Bethesda Terrace & Fountain, Bow Bridge reflection point, and Sheep Meadow skyline view.",
+            mapsQuery: "Bethesda Terrace Central Park New York",
+            foods: [
+              {
+                name: "Levain Bakery (167 W 74th St)",
+                dish: "Legendary 6oz warm Chocolate Chip Walnut cookie fresh from the oven.",
+                query: "Levain Bakery 167 W 74th St New York"
+              },
+              {
+                name: "Ralph's Coffee (888 Madison Ave)",
+                dish: "Bespoke drip brew & chic European ambiance.",
+                query: "Ralphs Coffee 888 Madison Ave New York"
+              }
+            ]
+          },
+          {
+            id: "d1-s2",
+            time: "11:30 AM",
+            duration: "1.5 hours",
+            title: "West Village Heritage Walk",
+            details: "Charming tree-lined cobbles along Grove St, Bedford St (Friends building & narrowest house), Christopher St, and Washington Square Park.",
+            mapsQuery: "Grove St and Bedford St New York",
+            foods: [
+              {
+                name: "L'Industrie Pizzeria (104 Christopher St)",
+                dish: "Famous hot honey burrata slice with fresh basil & tartufo.",
+                query: "L'Industrie Pizzeria 104 Christopher St New York"
+              },
+              {
+                name: "Apollo Bagels (73 Greenwich Ave)",
+                dish: "Open-faced sourdough bagel with Nova lox, dill & ripe tomato.",
+                query: "Apollo Bagels 73 Greenwich Ave New York"
+              },
+              {
+                name: "Mama's TOO! (323 Bleecker St)",
+                dish: "Angry Nonna square slice & Cacio e Pepe focaccia.",
+                query: "Mamas TOO 323 Bleecker St New York"
+              }
+            ]
+          },
+          {
+            id: "d1-s3",
+            time: "01:00 PM",
+            duration: "1 hour 15m",
+            title: "Chelsea Market Concourse",
+            details: "Historic former Nabisco biscuit factory concourse filled with artisan food purveyors and culinary stalls.",
+            mapsQuery: "Chelsea Market 75 9th Ave New York",
+            foods: [
+              {
+                name: "Los Tacos No. 1 (Inside Chelsea Market)",
+                dish: "Tijuana-style adobada pork tacos with pineapple slice on handmade corn tortillas.",
+                query: "Los Tacos No 1 Chelsea Market New York"
+              }
+            ]
+          },
+          {
+            id: "d1-s4",
+            time: "02:30 PM",
+            duration: "45 minutes",
+            title: "Little Island at Pier 55",
+            details: "Floating park rising above the Hudson River on 132 tulip concrete pillars with sweeping Lower Manhattan vistas.",
+            mapsQuery: "Little Island Pier 55 New York",
+            foods: [
+              {
+                name: "Do Not Feed Alligators (337 Bleecker St)",
+                dish: "Minimalist specialty coffee pour-overs & quiet garden courtyard.",
+                query: "Do Not Feed Alligators 337 Bleecker St New York"
+              }
+            ]
+          },
+          {
+            id: "d1-s5",
+            time: "03:30 PM",
+            duration: "1 hour 15m",
+            title: "The High Line Northbound",
+            details: "Elevated rail viaduct turned botanical walkway 30 feet above West Chelsea and the Meatpacking District.",
+            mapsQuery: "High Line Park New York",
+            foods: [
+              {
+                name: "Fellini Coffee (174 7th Ave S)",
+                dish: "Vintage Roman sidewalk espresso kiosk & pistachio cornetti.",
+                query: "Fellini Coffee 174 7th Ave S New York"
+              }
+            ]
+          },
+          {
+            id: "d1-s6",
+            time: "05:00 PM",
+            duration: "2 hours",
+            title: "Hudson Yards & The Edge Sky Deck",
+            details: "1,100ft outdoor sky deck with angled glass walls and glass floor looking over all five boroughs at sunset.",
+            mapsQuery: "Edge NYC Hudson Yards New York",
+            foods: []
+          },
+          {
+            id: "d1-s7",
+            time: "07:30 PM",
+            duration: "Evening Dinner",
+            title: "The Golden Swan (West Village)",
+            details: "Historic 1800s townhouse restaurant & cocktail salon at 314 W 11th St. Classic Gibson cocktails & French-American dining.",
+            mapsQuery: "The Golden Swan 314 W 11th St New York",
+            foods: [
+              {
+                name: "The Golden Swan (314 W 11th St)",
+                dish: "Signature Gibson cocktail with cocktail onions & prime bistro roasted duck.",
+                query: "The Golden Swan 314 W 11th St New York"
+              }
+            ]
+          }
+        ]
+      },
+
+      2: {
+        title: "Sunday, Oct 18 · Midtown Classics, Grand Central & Roosevelt Island",
+        description: "Gilded architecture, New York Public Library, Top of the Rock panorama, aerial tramway, and Times Square neon.",
+        stops: [
+          {
+            id: "d2-s1",
+            time: "09:30 AM",
+            duration: "1.5 hours",
+            title: "Flatiron Building & Madison Square Park",
+            details: "Iconic 1902 triangular landmark, tree-shaded paths of Madison Square Park, and historic views looking up 5th Avenue.",
+            mapsQuery: "Flatiron Building New York",
+            foods: [
+              {
+                name: "Saltbread Ko (Midtown / Koreatown)",
+                dish: "Korean sea salt butter bread (Sogeum-ppang) and fresh cream buns.",
+                query: "Saltbread Ko New York"
+              },
+              {
+                name: "PopUp Bagels (Thompson St / Midtown)",
+                dish: "Grip, Dip & Rip hot salt bagels with artisan scallion schmear.",
+                query: "PopUp Bagels New York"
+              }
+            ]
+          },
+          {
+            id: "d2-s2",
+            time: "11:15 AM",
+            duration: "1 hour 15m",
+            title: "NY Public Library & Bryant Park",
+            details: "Stephen A. Schwarzman Building, marble lions, Rose Main Reading Room, and Bryant Park autumn lawn.",
+            mapsQuery: "New York Public Library Main Branch New York",
+            foods: [
+              {
+                name: "Ralph's Coffee (Fifth Ave Flagship)",
+                dish: "Bespoke drip roast and dark chocolate Valrhona bars.",
+                query: "Ralphs Coffee 5th Ave New York"
+              }
+            ]
+          },
+          {
+            id: "d2-s3",
+            time: "12:45 PM",
+            duration: "1 hour 15m",
+            title: "Grand Central Terminal",
+            details: "Celestial ceiling, whispering gallery archways, and the 4-faced opal brass clock on the main concourse.",
+            mapsQuery: "Grand Central Terminal New York",
+            foods: [
+              {
+                name: "Grand Central Oyster Bar (Lower Concourse)",
+                dish: "Historic 1913 Guastavino tile vaults for clam chowder & fresh oysters.",
+                query: "Grand Central Oyster Bar New York"
+              }
+            ]
+          },
+          {
+            id: "d2-s4",
+            time: "02:30 PM",
+            duration: "2 hours",
+            title: "Top of the Rock at Rockefeller Center",
+            details: "Open-air 360° observation deck on the 70th floor with unobstructed views of the Empire State Building and Central Park.",
+            mapsQuery: "Top of the Rock New York",
+            foods: [
+              {
+                name: "Glace by Nonsit (1266 Madison Ave)",
+                dish: "Blowtorched toasted marshmallow rim hot chocolate & soft-serve.",
+                query: "Glace by Nonsit 1266 Madison Ave New York"
+              }
+            ]
+          },
+          {
+            id: "d2-s5",
+            time: "04:45 PM",
+            duration: "1 hour",
+            title: "Roosevelt Island Aerial Tramway",
+            details: "Tap contactless card ($2.90) at 59th St & 2nd Ave. Glide 250 feet above the East River alongside Queensboro Bridge.",
+            mapsQuery: "Roosevelt Island Tramway Manhattan Station New York",
+            foods: []
+          },
+          {
+            id: "d2-s6",
+            time: "06:30 PM",
+            duration: "Evening Dinner",
+            title: "Times Square & Korea Town (32nd St)",
+            details: "Experience the neon canyon of Broadway before heading to 32nd St for tabletop Korean BBQ and soju.",
+            mapsQuery: "Koreatown 32nd St New York",
+            foods: [
+              {
+                name: "Jongro BBQ (22 W 32nd St)",
+                dish: "Tabletop grilled prime marinated galbi & kimchi stew.",
+                query: "Jongro BBQ 22 W 32nd St New York"
+              }
+            ]
+          }
+        ]
+      },
+
+      3: {
+        title: "Monday, Oct 19 · Brooklyn Bridge, DUMBO, NYC Ferry & Chinatown",
+        description: "Promenade walk into Brooklyn, historic DUMBO cobblestones, NYC Ferry cruise, Chinatown dumplings, and cast-iron SoHo.",
+        stops: [
+          {
+            id: "d3-s1",
+            time: "09:00 AM",
+            duration: "1.5 hours",
+            title: "Brooklyn Bridge Walk",
+            details: "Stroll across the historic 1883 suspension bridge from Manhattan City Hall into Brooklyn with sweeping harbor views.",
+            mapsQuery: "Brooklyn Bridge Pedestrian Walkway New York",
+            foods: []
+          },
+          {
+            id: "d3-s2",
+            time: "10:45 AM",
+            duration: "1.5 hours",
+            title: "DUMBO Waterfront & Brooklyn Heights",
+            details: "Cobblestones of Washington St framing Manhattan Bridge, Jane's Carousel, and brownstone streets of Brooklyn Heights.",
+            mapsQuery: "Washington St and Water St Brooklyn DUMBO",
+            foods: [
+              {
+                name: "Din Soup Dumplings (DUMBO Waterfront)",
+                dish: "Hand-folded crab & pork soup dumplings near Brooklyn Bridge Park.",
+                query: "Din Soup Dumplings DUMBO Brooklyn"
+              },
+              {
+                name: "L'Appartement 4F (115 Montague St)",
+                dish: "Viral mini croissant cereal and freshly baked French almond croissants.",
+                query: "L'Appartement 4F 115 Montague St Brooklyn"
+              }
+            ]
+          },
+          {
+            id: "d3-s3",
+            time: "12:30 PM",
+            duration: "2 hours",
+            title: "NYC Ferry to Williamsburg & Brunch",
+            details: "Board the NYC Ferry ($4.00) at DUMBO Ferry Landing and cruise up the East River to North Williamsburg.",
+            mapsQuery: "DUMBO Ferry Terminal Brooklyn",
+            foods: [
+              {
+                name: "Sunday in Brooklyn (348 Wythe Ave)",
+                dish: "Famous malted hazelnut brown-butter pancakes & warm cinnamon rolls.",
+                query: "Sunday in Brooklyn 348 Wythe Ave Brooklyn"
+              },
+              {
+                name: "L'Industrie Pizzeria (Williamsburg - 254 S 2nd St)",
+                dish: "Original shop: Fig jam bacon & burrata slice.",
+                query: "L'Industrie Pizzeria 254 S 2nd St Brooklyn"
+              }
+            ]
+          },
+          {
+            id: "d3-s4",
+            time: "03:00 PM",
+            duration: "2 hours",
+            title: "Chinatown Dumpling & Tea Crawl",
+            details: "Cross back to Manhattan for steaming soup dumplings along Pell St, Bayard St, and Columbus Park.",
+            mapsQuery: "Pell St and Mott St Chinatown New York",
+            foods: [
+              {
+                name: "Deluxe Green Bo (66 Bayard St)",
+                dish: "Thin-skinned pork soup dumplings & crispy scallion pancakes.",
+                query: "Deluxe Green Bo 66 Bayard St New York"
+              },
+              {
+                name: "Joe's Ginger (25 Pell St)",
+                dish: "Crabmeat soup dumplings & beef scallion rolls on historic Pell St.",
+                query: "Joes Ginger 25 Pell St New York"
+              },
+              {
+                name: "Miss DU's Tea Shop (133 Chrystie St)",
+                dish: "Fresh cheese foam whipped over loose-leaf Taiwanese oolong tea.",
+                query: "Miss DUs Tea Shop 133 Chrystie St New York"
+              }
+            ]
+          },
+          {
+            id: "d3-s5",
+            time: "05:30 PM",
+            duration: "Evening Stroll",
+            title: "SoHo & Nolita Cast-Iron Architecture",
+            details: "Historic cast-iron facades along Greene, Prince, and Spring Streets, followed by Italian sweets.",
+            mapsQuery: "Prince St and Greene St SoHo New York",
+            foods: [
+              {
+                name: "Caffe Paradiso (202B Elizabeth St)",
+                dish: "Sicilian ricotta cannoli piped fresh to order & espresso.",
+                query: "Caffe Paradiso 202B Elizabeth St New York"
+              },
+              {
+                name: "Neighborhood Coffee (184 Mott St)",
+                dish: "Silky oat flat whites & Nordic cardamom buns.",
+                query: "Neighborhood Coffee 184 Mott St New York"
+              },
+              {
+                name: "Davelle (102 Allen St)",
+                dish: "Japanese berry/honey brick toast & mentaiko pasta.",
+                query: "Davelle 102 Allen St New York"
+              }
+            ]
+          }
+        ]
+      },
+
+      4: {
+        title: "Tuesday, Oct 20 · SUMMIT One Vanderbilt, MoMA & Lady Liberty Ferry",
+        description: "Mirrored sky rooms, MoMA masterpieces, World Trade Center Oculus, Wall Street, and sunset ferry past Statue of Liberty.",
+        stops: [
+          {
+            id: "d4-s1",
+            time: "09:30 AM",
+            duration: "2 hours",
+            title: "SUMMIT One Vanderbilt",
+            details: "Kenzo Digital's multi-level mirrored observation experience 1,200ft over Grand Central with glass skyboxes.",
+            mapsQuery: "SUMMIT One Vanderbilt New York",
+            foods: []
+          },
+          {
+            id: "d4-s2",
+            time: "11:45 AM",
+            duration: "1.5 hours",
+            title: "Museum of Modern Art (MoMA)",
+            details: "Van Gogh's The Starry Night, Monet's Water Lilies, modern masterpieces, and the serene sculpture garden.",
+            mapsQuery: "Museum of Modern Art 11 W 53rd St New York",
+            foods: []
+          },
+          {
+            id: "d4-s3",
+            time: "01:45 PM",
+            duration: "1.5 hours",
+            title: "Oculus & 9/11 Memorial",
+            details: "Santiago Calatrava's white ribbed winged Oculus hub, followed by the twin reflecting pools at the 9/11 Memorial.",
+            mapsQuery: "The Oculus World Trade Center New York",
+            foods: []
+          },
+          {
+            id: "d4-s4",
+            time: "03:30 PM",
+            duration: "1 hour",
+            title: "Wall Street & Charging Bull",
+            details: "Federal Hall, New York Stock Exchange facade, and the bronze Charging Bull at Bowling Green.",
+            mapsQuery: "Charging Bull Bowling Green New York",
+            foods: []
+          },
+          {
+            id: "d4-s5",
+            time: "04:45 PM",
+            duration: "1.5 hours",
+            title: "Free Staten Island Ferry Past Lady Liberty",
+            details: "Board the 100% free orange ferry at Whitehall Terminal for golden hour views of Statue of Liberty & Manhattan skyline.",
+            mapsQuery: "Whitehall Terminal Staten Island Ferry New York",
+            foods: []
+          },
+          {
+            id: "d4-s6",
+            time: "06:45 PM",
+            duration: "Finale Dinner",
+            title: "South Street Seaport & Pier 17 Farewell Dinner",
+            details: "Celebrate the trip conclusion on the cobblestones of South Street Seaport overlooking the illuminated Brooklyn Bridge.",
+            mapsQuery: "Pier 17 South Street Seaport New York",
+            foods: []
+          }
+        ]
+      }
+    };
+
+    /* ----------------------------------------------------
+       MASTER 23 TOUR FOOD SPOTS
+       ---------------------------------------------------- */
+    const ALL_FOOD_SPOTS = [
+      {
+        id: "f-1",
+        name: "L'Industrie Pizzeria (West Village)",
+        neighborhood: "West Village",
+        address: "104 Christopher St, New York, NY 10014",
+        category: "pizza",
+        dish: "Hot honey burrata slice with fresh basil & tartufo.",
+        tip: "Line moves fast. Grab a hot slice right out of the deck oven."
+      },
+      {
+        id: "f-2",
+        name: "L'Industrie Pizzeria (Williamsburg)",
+        neighborhood: "Williamsburg",
+        address: "254 S 2nd St, Brooklyn, NY 11211",
+        category: "pizza",
+        dish: "Fig jam bacon with fresh mozzarella & burrata.",
+        tip: "The legendary original shop. Try a cannoli too."
+      },
+      {
+        id: "f-3",
+        name: "Apollo Bagels",
+        neighborhood: "West Village",
+        address: "73 Greenwich Ave, New York, NY 10014",
+        category: "bagels",
+        dish: "Open-faced sourdough bagel with Nova lox, dill & tomato.",
+        tip: "Airy sourdough crust with blistered chew."
+      },
+      {
+        id: "f-4",
+        name: "Los Tacos No. 1",
+        neighborhood: "West Village",
+        address: "Chelsea Market (75 9th Ave) & Times Square",
+        category: "tacos",
+        dish: "Tijuana adobada spit pork tacos with fresh pineapple slice.",
+        tip: "Ask for 'con todo' on fresh handmade corn tortillas."
+      },
+      {
+        id: "f-5",
+        name: "Mama's TOO!",
+        neighborhood: "West Village",
+        address: "323 Bleecker St, New York, NY 10014",
+        category: "pizza",
+        dish: "Angry Nonna square slice & Cacio e Pepe focaccia.",
+        tip: "Airy focaccia squares with crispy caramelized cheese edges."
+      },
+      {
+        id: "f-6",
+        name: "Levain Bakery",
+        neighborhood: "Upper West Side",
+        address: "167 W 74th St, New York, NY 10023",
+        category: "coffee",
+        dish: "6oz warm Chocolate Chip Walnut cookie.",
+        tip: "Break the cookie in half for the molten center."
+      },
+      {
+        id: "f-7",
+        name: "PopUp Bagels",
+        neighborhood: "West Village",
+        address: "177 Thompson St, New York, NY 10012",
+        category: "bagels",
+        dish: "Grip, Dip & Rip hot salt bagels with artisan schmears.",
+        tip: "Served whole and steaming hot from the oven."
+      },
+      {
+        id: "f-8",
+        name: "The Golden Swan",
+        neighborhood: "West Village",
+        address: "314 W 11th St, New York, NY 10014",
+        category: "dinner",
+        dish: "Historic townhouse dinner & signature Gibson cocktails.",
+        tip: "1800s salon setting. Reserve in advance for the dining room."
+      },
+      {
+        id: "f-9",
+        name: "Sunday in Brooklyn",
+        neighborhood: "Williamsburg",
+        address: "348 Wythe Ave, Brooklyn, NY 11249",
+        category: "brunch",
+        dish: "Malted hazelnut brown butter pancakes & cinnamon rolls.",
+        tip: "The signature pancake stack with hazelnut praline syrup is unbeatable."
+      },
+      {
+        id: "f-10",
+        name: "Ralph's Coffee / Ralph Lauren",
+        neighborhood: "Upper East Side",
+        address: "888 Madison Ave & 5th Ave",
+        category: "coffee",
+        dish: "Bespoke drip brew, Ralph's espresso & signature chocolate bar.",
+        tip: "Vintage European cafe inside Ralph Lauren's mansion."
+      },
+      {
+        id: "f-11",
+        name: "Do Not Feed Alligators",
+        neighborhood: "West Village",
+        address: "337 Bleecker St, New York, NY 10014",
+        category: "coffee",
+        dish: "Minimalist Scandinavian cafe & specialty pour-overs.",
+        tip: "Quiet garden courtyard tucked away on Bleecker St."
+      },
+      {
+        id: "f-12",
+        name: "Fellini Coffee",
+        neighborhood: "West Village",
+        address: "174 7th Ave S, New York, NY 10014",
+        category: "coffee",
+        dish: "Vintage Roman sidewalk espresso kiosk & pistachio cornetti.",
+        tip: "Standing-room sidewalk espresso window."
+      },
+      {
+        id: "f-13",
+        name: "Glace by Nonsit",
+        neighborhood: "Upper East Side",
+        address: "1266 Madison Ave, New York, NY 10128",
+        category: "coffee",
+        dish: "Blowtorched toasted marshmallow rim hot chocolate & soft-serve.",
+        tip: "Rich Valrhona hot chocolate crowned with torched fluff."
+      },
+      {
+        id: "f-14",
+        name: "L'Appartement 4F",
+        neighborhood: "Brooklyn Heights",
+        address: "115 Montague St, Brooklyn, NY 11201",
+        category: "coffee",
+        dish: "Viral mini croissant cereal & French almond croissants.",
+        tip: "Arrive in the morning before popular items sell out."
+      },
+      {
+        id: "f-15",
+        name: "Davelle",
+        neighborhood: "Lower East Side",
+        address: "102 Allen St, New York, NY 10002",
+        category: "coffee",
+        dish: "Japanese berry & honey brick toasts, and mentaiko spaghetti.",
+        tip: "Intimate Japanese cafe with geometric toast art."
+      },
+      {
+        id: "f-16",
+        name: "Deluxe Green Bo",
+        neighborhood: "Chinatown",
+        address: "66 Bayard St, New York, NY 10013",
+        category: "dumplings",
+        dish: "Steaming pork soup dumplings & crispy scallion pancakes.",
+        tip: "Delicate skins with hot, flavorful broth inside."
+      },
+      {
+        id: "f-17",
+        name: "Joe's Ginger",
+        neighborhood: "Chinatown",
+        address: "25 Pell St, New York, NY 10013",
+        category: "dumplings",
+        dish: "Crabmeat soup dumplings & pan-fried beef rolls.",
+        tip: "Located on historic Pell Street."
+      },
+      {
+        id: "f-18",
+        name: "Miss DU's Tea Shop",
+        neighborhood: "Chinatown",
+        address: "133 Chrystie St, New York, NY 10002",
+        category: "coffee",
+        dish: "Fresh whipped cheese foam loose-leaf oolong & jasmine teas.",
+        tip: "Savory salted cheese foam paired with fresh loose-leaf tea."
+      },
+      {
+        id: "f-19",
+        name: "Caffe Paradiso",
+        neighborhood: "Nolita",
+        address: "202B Elizabeth St, New York, NY 10012",
+        category: "coffee",
+        dish: "Sicilian cannoli filled fresh to order & espresso.",
+        tip: "Shells piped fresh to keep them crisp."
+      },
+      {
+        id: "f-20",
+        name: "Neighborhood Coffee",
+        neighborhood: "Nolita",
+        address: "184 Mott St, New York, NY 10012",
+        category: "coffee",
+        dish: "Silky oat flat whites & Nordic cardamom buns.",
+        tip: "Warm neighborhood haven during SoHo strolls."
+      },
+      {
+        id: "f-21",
+        name: "Rhythm Zero",
+        neighborhood: "Greenpoint",
+        address: "398 Manhattan Ave, Brooklyn, NY 11211",
+        category: "coffee",
+        dish: "Ceramic matcha studio & pour-over filter bar.",
+        tip: "Art gallery aesthetic with Kyoto ceremonial matcha."
+      },
+      {
+        id: "f-22",
+        name: "Din Soup Dumplings",
+        neighborhood: "DUMBO",
+        address: "Brooklyn Bridge Waterfront, DUMBO, Brooklyn",
+        category: "dumplings",
+        dish: "Hand-folded crab & pork soup dumplings near DUMBO park.",
+        tip: "Ideal lunch bite right after crossing the bridge."
+      },
+      {
+        id: "f-23",
+        name: "Saltbread Ko",
+        neighborhood: "Midtown",
+        address: "Koreatown / Midtown, New York, NY",
+        category: "coffee",
+        dish: "Korean sea salt butter bread (Sogeum-ppang) & fresh cream buns.",
+        tip: "Flaky buttery crust topped with crunchy Maldon salt."
+      }
+    ];
+
+    /* ----------------------------------------------------
+       PERSISTENCE & STATE
+       ---------------------------------------------------- */
+    let currentActiveDay = 1;
+    let visitedStops = new Set();
+    let triedFoods = new Set();
+    let omnyTaps = 0;
+    let foodCategoryFilter = "all";
+    let foodSearchTerm = "";
+
+    function loadPersistedData() {
+      try {
+        const vStops = localStorage.getItem("nyc_visited_stops_v2");
+        if (vStops) visitedStops = new Set(JSON.parse(vStops));
+
+        const tFoods = localStorage.getItem("nyc_tried_foods_v2");
+        if (tFoods) triedFoods = new Set(JSON.parse(tFoods));
+
+        const taps = localStorage.getItem("nyc_omny_taps_v2");
+        if (taps) omnyTaps = parseInt(taps, 10) || 0;
+      } catch (e) {
+        console.warn("Could not load state", e);
+      }
+    }
+
+    function savePersistedData() {
+      try {
+        localStorage.setItem("nyc_visited_stops_v2", JSON.stringify([...visitedStops]));
+        localStorage.setItem("nyc_tried_foods_v2", JSON.stringify([...triedFoods]));
+        localStorage.setItem("nyc_omny_taps_v2", omnyTaps.toString());
+      } catch (e) {
+        console.warn("Could not save state", e);
+      }
+    }
+
+    /* ----------------------------------------------------
+       TOAST
+       ---------------------------------------------------- */
+    let toastTimer;
+    function triggerToast(msg) {
+      const toast = document.getElementById("minimalToast");
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add("visible");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("visible");
+      }, 2000);
+    }
+
+    /* ----------------------------------------------------
+       DAY SELECTOR & ITINERARY RENDERING
+       ---------------------------------------------------- */
+    function selectDay(dayNumber) {
+      currentActiveDay = dayNumber;
+
+      // Update button active states
+      const dayBtns = document.querySelectorAll(".day-btn");
+      dayBtns.forEach((btn, idx) => {
+        btn.classList.toggle("active", idx + 1 === dayNumber);
+      });
+
+      renderCurrentDay();
+    }
+
+    function renderCurrentDay() {
+      const dayData = ITINERARY_DAYS[currentActiveDay];
+      if (!dayData) return;
+
+      document.getElementById("currentDayHeading").textContent = dayData.title;
+      document.getElementById("currentDayDescription").textContent = dayData.description;
+
+      const container = document.getElementById("dayStopsContainer");
+      if (!container) return;
+
+      container.innerHTML = dayData.stops.map((stop, index) => {
+        const isVisited = visitedStops.has(stop.id);
+        const mapStopUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stop.mapsQuery)}`;
+
+        let foodHtml = "";
+        if (stop.foods && stop.foods.length > 0) {
+          const foodItems = stop.foods.map(f => {
+            const foodMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(f.query)}`;
+            return `
+              <div class="food-item">
+                <div class="food-item-name">${escapeHtml(f.name)}</div>
+                <div class="food-item-desc">${escapeHtml(f.dish)}</div>
+                <div class="food-item-actions">
+                  <a class="link-food-maps" target="_blank" rel="noopener noreferrer" href="${foodMapUrl}">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Open in Google Maps
+                  </a>
+                </div>
+              </div>
+            `;
+          }).join("");
+
+          foodHtml = `
+            <div class="food-box">
+              <div class="food-box-header">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+                Nearby Food Callouts
+              </div>
+              ${foodItems}
+            </div>
+          `;
+        }
+
+        return `
+          <article class="stop-card ${isVisited ? 'completed' : ''}" id="card-${stop.id}">
+            <div class="stop-meta">
+              <span>${escapeHtml(stop.time)} · Stop ${index + 1}</span>
+              <span class="stop-duration">${escapeHtml(stop.duration)}</span>
+            </div>
+
+            <h3 class="stop-title">${escapeHtml(stop.title)}</h3>
+            <p class="stop-details">${escapeHtml(stop.details)}</p>
+
+            ${foodHtml}
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="${mapStopUrl}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                Walking Directions
+              </a>
+              <button class="btn-action btn-visited ${isVisited ? 'checked' : ''}" onclick="toggleVisitedStop('${stop.id}')">
+                <span class="visited-indicator">${isVisited ? '✓ Visited' : 'Mark Visited'}</span>
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function toggleVisitedStop(stopId) {
+      if (visitedStops.has(stopId)) {
+        visitedStops.delete(stopId);
+        triggerToast("Marked as upcoming");
+      } else {
+        visitedStops.add(stopId);
+        triggerToast("Stop marked visited!");
+      }
+      savePersistedData();
+      renderCurrentDay();
+    }
+
+    /* ----------------------------------------------------
+       FOOD DIRECTORY
+       ---------------------------------------------------- */
+    function renderFoodDirectory() {
+      const container = document.getElementById("foodListMount");
+      if (!container) return;
+
+      const q = foodSearchTerm.toLowerCase().trim();
+
+      const filtered = ALL_FOOD_SPOTS.filter(spot => {
+        let matchesCat = true;
+        if (foodCategoryFilter === "pizza") matchesCat = spot.category === "pizza";
+        else if (foodCategoryFilter === "bagels") matchesCat = spot.category === "bagels";
+        else if (foodCategoryFilter === "coffee") matchesCat = (spot.category === "coffee" || spot.category === "bakery");
+        else if (foodCategoryFilter === "dumplings") matchesCat = spot.category === "dumplings";
+        else if (foodCategoryFilter === "west-village") matchesCat = spot.neighborhood.toLowerCase().includes("west village");
+        else if (foodCategoryFilter === "williamsburg") matchesCat = spot.neighborhood.toLowerCase().includes("williamsburg");
+        else if (foodCategoryFilter === "chinatown") matchesCat = spot.neighborhood.toLowerCase().includes("chinatown");
+
+        let matchesText = true;
+        if (q) {
+          matchesText = spot.name.toLowerCase().includes(q) ||
+                        spot.neighborhood.toLowerCase().includes(q) ||
+                        spot.dish.toLowerCase().includes(q) ||
+                        spot.address.toLowerCase().includes(q);
+        }
+
+        return matchesCat && matchesText;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="stop-card" style="text-align: center; padding: 32px 16px;">
+            <div style="color: var(--text-muted); font-size: 14px;">No spots found matching your search.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(spot => {
+        const isTried = triedFoods.has(spot.id);
+        const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(spot.name + ' ' + spot.address)}`;
+
+        return `
+          <article class="spot-card-food ${isTried ? 'tried' : ''}">
+            <div class="food-card-top-row">
+              <h3 class="food-card-name">${escapeHtml(spot.name)}</h3>
+              <span class="food-card-meta">${escapeHtml(spot.neighborhood)}</span>
+            </div>
+            <div class="food-card-address">${escapeHtml(spot.address)}</div>
+
+            <div class="food-card-dish">
+              <strong>Must-Order:</strong> ${escapeHtml(spot.dish)}
+            </div>
+
+            <div class="stop-actions">
+              <a class="btn-action" target="_blank" rel="noopener noreferrer" href="${mapUrl}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                Open in Maps
+              </a>
+              <button class="btn-action btn-visited ${isTried ? 'checked' : ''}" onclick="toggleTriedFood('${spot.id}')">
+                <span>${isTried ? '✓ Tried it' : 'Mark as Tried'}</span>
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      updateFoodTrackerUI();
+    }
+
+    function toggleTriedFood(foodId) {
+      if (triedFoods.has(foodId)) {
+        triedFoods.delete(foodId);
+        triggerToast("Removed from tried list");
+      } else {
+        triedFoods.add(foodId);
+        triggerToast("Marked as tasted!");
+      }
+      savePersistedData();
+      renderFoodDirectory();
+    }
+
+    function updateFoodTrackerUI() {
+      const countEl = document.getElementById("foodTastedCount");
+      const barEl = document.getElementById("foodTrackerBar");
+      const count = triedFoods.size;
+      const total = ALL_FOOD_SPOTS.length;
+      const pct = Math.round((count / total) * 100);
+
+      if (countEl) countEl.textContent = count;
+      if (barEl) barEl.style.width = `${pct}%`;
+    }
+
+    function initFoodFilters() {
+      const filterWrap = document.getElementById("foodFilterChips");
+      if (filterWrap) {
+        filterWrap.addEventListener("click", e => {
+          const btn = e.target.closest(".filter-btn");
+          if (!btn) return;
+          filterWrap.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          foodCategoryFilter = btn.dataset.category || "all";
+          renderFoodDirectory();
+        });
+      }
+
+      const input = document.getElementById("foodSearchInput");
+      const clearBtn = document.getElementById("foodClearBtn");
+      if (input && clearBtn) {
+        input.addEventListener("input", e => {
+          foodSearchTerm = e.target.value;
+          clearBtn.style.display = foodSearchTerm ? "block" : "none";
+          renderFoodDirectory();
+        });
+        clearBtn.addEventListener("click", () => {
+          input.value = "";
+          foodSearchTerm = "";
+          clearBtn.style.display = "none";
+          input.focus();
+          renderFoodDirectory();
+        });
+      }
+    }
+
+    /* ----------------------------------------------------
+       TRANSIT OMNY
+       ---------------------------------------------------- */
+    function addOmnyTap() {
+      omnyTaps++;
+      savePersistedData();
+      updateOmnyDisplay();
+      triggerToast("OMNY ride added");
+    }
+
+    function resetOmnyTap() {
+      if (confirm("Reset OMNY counter to 0?")) {
+        omnyTaps = 0;
+        savePersistedData();
+        updateOmnyDisplay();
+      }
+    }
+
+    function updateOmnyDisplay() {
+      const el = document.getElementById("omnyCountText");
+      if (!el) return;
+      const cost = (Math.min(omnyTaps, 12) * 2.90).toFixed(2);
+      if (omnyTaps >= 12) {
+        const free = omnyTaps - 12;
+        el.textContent = `${omnyTaps} taps ($34.80) · Cap reached! ${free} free ride${free === 1 ? '' : 's'}`;
+      } else {
+        el.textContent = `${omnyTaps} taps ($${cost}) · ${12 - omnyTaps} to free cap`;
+      }
+    }
+
+    /* ----------------------------------------------------
+       NAVIGATION
+       ---------------------------------------------------- */
+    function switchNav(viewId, btn) {
+      document.querySelectorAll(".view-container").forEach(v => v.classList.remove("active"));
+      const target = document.getElementById(viewId);
+      if (target) target.classList.add("active");
+
+      document.querySelectorAll(".tab-item-btn").forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /* ----------------------------------------------------
+       CLOCKS
+       ---------------------------------------------------- */
+    function updateClocks() {
+      const now = new Date();
+      const nycFormat = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+      const ldnFormat = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/London",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+
+      document.getElementById("clockNyc").textContent = nycFormat.format(now);
+      document.getElementById("clockLdn").textContent = ldnFormat.format(now);
+    }
+
+    /* ----------------------------------------------------
+       LIVE OPEN-METEO WEATHER
+       ---------------------------------------------------- */
+    const WEATHER_API = "https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.0060&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph";
+
+    function decodeWmo(code) {
+      if (code === 0) return "Clear Sky";
+      if (code === 1 || code === 2) return "Partly Cloudy";
+      if (code === 3) return "Overcast";
+      if (code >= 51 && code <= 67) return "Rain Showers";
+      if (code >= 71 && code <= 77) return "Flurries";
+      return "Autumn Breeze";
+    }
+
+    async function loadWeather() {
+      const degEl = document.getElementById("weatherDeg");
+      const descEl = document.getElementById("weatherDesc");
+      const tipEl = document.getElementById("weatherTip");
+
+      try {
+        const res = await fetch(WEATHER_API);
+        if (!res.ok) throw new Error("API error");
+        const json = await res.json();
+        const cur = json.current;
+
+        const temp = Math.round(cur.temperature_2m);
+        const codeDesc = decodeWmo(cur.weather_code);
+        const wind = Math.round(cur.wind_speed_10m);
+
+        degEl.textContent = `${temp}°F`;
+        descEl.textContent = codeDesc;
+
+        if (cur.precipitation > 0.02) {
+          tipEl.textContent = "Umbrella advised for street walks";
+        } else if (wind >= 16) {
+          tipEl.textContent = `Brisk ${wind}mph winds at The Edge`;
+        } else if (temp < 54) {
+          tipEl.textContent = "Light wool layer advised for Central Park";
+        } else {
+          tipEl.textContent = "Pleasant autumn walking weather";
+        }
+      } catch (e) {
+        degEl.textContent = "58°F";
+        descEl.textContent = "Crisp Autumn";
+        tipEl.textContent = "Light jacket recommended for High Line";
+      }
+    }
+
+    /* ----------------------------------------------------
+       EXPORT SINGLE-FILE HTML
+       ---------------------------------------------------- */
+    function initExport() {
+      const btn = document.getElementById("btnExportHtml");
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        try {
+          const content = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+          const blob = new Blob([content], { type: "text/html;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "NYC-Trip-Companion.html";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          triggerToast("Saved single-file HTML");
+        } catch (e) {
+          triggerToast("Export failed");
+        }
+      });
+    }
+
+    /* ----------------------------------------------------
+       INIT
+       ---------------------------------------------------- */
+    document.addEventListener("DOMContentLoaded", () => {
+      loadPersistedData();
+      selectDay(1);
+      renderFoodDirectory();
+      initFoodFilters();
+      updateOmnyDisplay();
+      initExport();
+
+      updateClocks();
+      setInterval(updateClocks, 1000);
+
+      loadWeather();
+      const refreshBtn = document.getElementById("btnRefreshWeather");
+      if (refreshBtn) {
+        refreshBtn.addEventListener("click", () => {
+          loadWeather();
+          triggerToast("Refreshing weather...");
+        });
+      }
+    });
+
+    function escapeHtml(s) {
+      if (!s) return "";
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+
+
+</body></html>
